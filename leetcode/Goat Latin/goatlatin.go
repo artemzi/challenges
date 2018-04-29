@@ -8,8 +8,10 @@ import (
 )
 
 func toGoatLatin(S string) string {
-	var result []string
-	var x byte
+	var (
+		result []string
+		x      byte
+	)
 	vowel := []rune{'a', 'e', 'i', 'o', 'u'}
 	data := strings.Split(S, " ")
 
