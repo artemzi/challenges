@@ -2,6 +2,8 @@
 // https://leetcode.com/contest/weekly-contest-82/problems/friends-of-appropriate-ages/
 package friendsages
 
+import "sort"
+
 // Some people will make friend requests. The list of their ages is given and ages[i] is the age
 // of the ith person.
 
@@ -22,37 +24,54 @@ package friendsages
 // 1 <= ages.length <= 20000.
 // 1 <= ages[i] <= 120.
 
-func checkConditions(A int, B int) bool {
-	if A < 100 && B > 100 {
-		return false
-	}
-
-	if B > A || float64(B) <= 0.5*float64(A)+7 {
-		return false
-	}
-
-	return true
-}
-
 func numFriendRequests(ages []int) int {
-	// TODO: fix ' Time Limit Exceeded' on leetcode
-	var requests int
+	// 83 / 83 test cases passed.
+	// Status: Accepted
+	// Runtime: 80 ms
+	var req int
+	data := ages[:]
+	sort.Ints(data)
 
-	for i := 0; i < len(ages); i++ {
-		for j := i + 1; j < len(ages); j++ {
-			if checkConditions(ages[i], ages[j]) {
-				requests++
-			}
+	for i, v := range data {
+		if 0.5*float64(v)+7 > float64(v) {
+			continue
+		}
+		s := BisectRight(data, int(0.5*float64(v)+7))
+		t := BisectRight(data, v)
+		if s <= i && i <= t {
+			req += (t - s - 1)
+		} else {
+			req += (t - s)
 		}
 	}
-
-	for i := len(ages) - 1; i > 0; i-- {
-		for j := i - 1; j >= 0; j-- {
-			if checkConditions(ages[i], ages[j]) {
-				requests++
-			}
-		}
-	}
-
-	return requests
+	return req
 }
+
+// BisectRight is equivalent of Python's bisect_right()
+func BisectRight(a []int, v int) int {
+	return bisectRightRange(a, v, 0, len(a))
+}
+
+func bisectRightRange(a []int, v int, lo, hi int) int {
+	s := a[lo:hi]
+	return sort.Search(len(s), func(i int) bool {
+		return s[i] > v
+	})
+}
+
+// +++++++++++++++++ Research: ++++++++++
+
+// BisectLeft is equivalent of Python's bisect_left()
+// func BisectLeft(a []int, v int) int {
+// 	return bisectLeftRange(a, v, 0, len(a))
+// }
+
+// func bisectLeftRange(a []int, v int, lo, hi int) int {
+// 	s := a[lo:hi]
+// 	return sort.Search(len(s), func(i int) bool {
+// 		return s[i] >= v
+// 	})
+// }
+
+// Binary search for ints example
+// https://play.golang.org/p/G1CH7kPojZ6
