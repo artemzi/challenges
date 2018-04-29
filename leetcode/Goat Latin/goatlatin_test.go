@@ -5,17 +5,18 @@ import (
 )
 
 func TestToGoatLatin(t *testing.T) {
-	input := "I speak Goat Latin"
-	expected := "Imaa peaksmaaa oatGmaaaa atinLmaaaaa"
-
-	if r := toGoatLatin(input); r != expected {
-		t.Errorf("\nResult for \n{%s}\n is wrong. got: \n{%s}\n, expected: \n{%s}\n", input, r, expected)
+	for _, test := range stringTestCases {
+		actual := toGoatLatin(test.input)
+		if actual != test.expected {
+			t.Errorf("Test [%s], expected [%s], actual [%s]", test.input, test.expected, actual)
+		}
 	}
+}
 
-	input = "The quick brown fox jumped over the lazy dog"
-	expected = "heTmaa uickqmaaa rownbmaaaa oxfmaaaaa umpedjmaaaaaa overmaaaaaaa hetmaaaaaaaa azylmaaaaaaaaa ogdmaaaaaaaaaa"
-
-	if r := toGoatLatin(input); r != expected {
-		t.Errorf("\nResult for \n{%s}\n is wrong. got: \n{%s}\n, expected: \n{%s}\n", input, r, expected)
+func BenchmarkToGoatLatin(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		for _, test := range stringTestCases {
+			toGoatLatin(test.input)
+		}
 	}
 }
