@@ -22,6 +22,37 @@ package friendsages
 // 1 <= ages.length <= 20000.
 // 1 <= ages[i] <= 120.
 
+func checkConditions(A int, B int) bool {
+	if A < 100 && B > 100 {
+		return false
+	}
+
+	if B > A || float64(B) <= 0.5*float64(A)+7 {
+		return false
+	}
+
+	return true
+}
+
 func numFriendRequests(ages []int) int {
-	return 0
+	// TODO: fix ' Time Limit Exceeded' on leetcode
+	var requests int
+
+	for i := 0; i < len(ages); i++ {
+		for j := i + 1; j < len(ages); j++ {
+			if checkConditions(ages[i], ages[j]) {
+				requests++
+			}
+		}
+	}
+
+	for i := len(ages) - 1; i > 0; i-- {
+		for j := i - 1; j >= 0; j-- {
+			if checkConditions(ages[i], ages[j]) {
+				requests++
+			}
+		}
+	}
+
+	return requests
 }
