@@ -9,7 +9,7 @@ func TestFlipAndInvertImage(t *testing.T) {
 	for _, test := range stringTestCases {
 		actual := flipAndInvertImage(test.input)
 		if !reflect.DeepEqual(actual, test.expected) {
-			t.Errorf("Test [%v], expected [%v], actual [%v]", test.input, test.expected, actual)
+			t.Errorf("\nTest     [%v], \nexpected [%v], \nactual   [%v]", test.input, test.expected, actual)
 		}
 	}
 }
