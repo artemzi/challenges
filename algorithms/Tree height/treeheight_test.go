@@ -1,4 +1,4 @@
-package treeheight
+package main
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 
 func TestFlipAndInvertImage(t *testing.T) {
 	for _, test := range stringTestCases {
-		actual := getTreeHeight(test.input.n, test.input.val)
+		actual := getMaxDeph(test.input.val)
 		if actual != test.expected {
 			t.Errorf("\nTest     [%v], \nexpected [%v], \nactual   [%v]", test.input, test.expected, actual)
 		}
@@ -16,7 +16,7 @@ func TestFlipAndInvertImage(t *testing.T) {
 func BenchmarkFlipAndInvertImage(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for _, test := range stringTestCases {
-			getTreeHeight(test.input.n, test.input.val)
+			getMaxDeph(test.input.val)
 		}
 	}
 }
