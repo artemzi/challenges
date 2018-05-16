@@ -27,12 +27,8 @@ import (
 Ограничения. 1 ≤ n ≤ 105.
 */
 
-var nodes map[int][]int
-
 func main() {
-	var (
-		n int
-	)
+	var n int
 	fmt.Scan(&n)
 
 	data := make([]int, n)
@@ -44,37 +40,26 @@ func main() {
 }
 
 func getMaxDeph(data []int) int {
-	buildNodes(data)
-	return height(indexOf(-1, data), 1)
+	var root int
+	nodes := make(map[int][]int, len(data))
+
+	for child, e := range data {
+		if e == -1 {
+			root = child
+			continue
+		}
+		nodes[e] = append(nodes[e], child)
+	}
+	return height(root, 1, nodes)
 }
 
-func height(root int, h int) int {
+func height(root int, h int, nodes map[int][]int) int {
 	max := h
 	for _, c := range nodes[root] {
-		tmp := height(c, h) + 1
+		tmp := height(c, h, nodes) + 1
 		if max < tmp {
 			max = tmp
 		}
 	}
 	return max
-}
-
-func buildNodes(data []int) {
-	nodes = make(map[int][]int, len(data))
-
-	for child, e := range data {
-		if e == -1 {
-			continue
-		}
-		nodes[e] = append(nodes[e], child)
-	}
-}
-
-func indexOf(e int, data []int) int {
-	for k, v := range data {
-		if e == v {
-			return k
-		}
-	}
-	return -1
 }
