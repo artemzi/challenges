@@ -3,7 +3,7 @@ package main
 type processTest struct {
 	skipped  bool
 	input    [][]int
-	expected interface{}
+	expected []int
 }
 
 var stringTestCases = []processTest{
@@ -12,7 +12,7 @@ var stringTestCases = []processTest{
 		input: [][]int{
 			[]int{1, 0},
 		},
-		expected: nil,
+		expected: []int{},
 	},
 	{
 		skipped: false,
@@ -20,7 +20,7 @@ var stringTestCases = []processTest{
 			[]int{1, 1},
 			[]int{0, 0},
 		},
-		expected: 0,
+		expected: []int{0},
 	},
 	{
 		skipped: false,
@@ -47,7 +47,7 @@ var stringTestCases = []processTest{
 		},
 	},
 	{
-		skipped: true,
+		skipped: false,
 		input: [][]int{
 			[]int{2, 3},
 			[]int{1, 100},
@@ -61,7 +61,7 @@ var stringTestCases = []processTest{
 		},
 	},
 	{
-		skipped: true,
+		skipped: false,
 		input: [][]int{
 			[]int{2, 6},
 			[]int{0, 2},
@@ -81,7 +81,7 @@ var stringTestCases = []processTest{
 		},
 	},
 	{
-		skipped: true,
+		skipped: false,
 		input: [][]int{
 			[]int{2, 8},
 			[]int{0, 0},
@@ -105,7 +105,7 @@ var stringTestCases = []processTest{
 		},
 	},
 	{
-		skipped: true,
+		skipped: false,
 		input: [][]int{
 			[]int{2, 8},
 			[]int{0, 0},
@@ -129,7 +129,7 @@ var stringTestCases = []processTest{
 		},
 	},
 	{
-		skipped: true,
+		skipped: false,
 		input: [][]int{
 			[]int{1, 5},
 			[]int{999999, 1},

@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 /**
 Обработка сетевых пакетов
 Реализовать обработчик сетевых пакетов.
@@ -37,10 +41,48 @@ package main
 */
 
 func main() {
+	var (
+		size     int
+		count    int
+		arrival  int
+		duration int
+		buffer   []int
+		freeTime int
+		timeExit int
+	)
+	fmt.Scan(&size, &count)
 
+	buffer = make([]int, count)
+	for i := 0; i < count; i++ {
+		fmt.Scan(&arrival, &duration)
+		if len(buffer) > 0 {
+			for arrival >= buffer[0] {
+				freeTime = buffer[0]
+				if len(buffer) > 1 {
+					buffer = buffer[1:]
+				} else {
+					buffer = buffer[:0]
+					break
+				}
+			}
+			if len(buffer) < size {
+				if len(buffer) > 0 {
+					timeExit = max(arrival, buffer[len(buffer)-1])
+				} else {
+					timeExit = max(arrival, freeTime)
+				}
+				buffer = append(buffer, timeExit+duration)
+				fmt.Println(timeExit)
+			} else {
+				fmt.Println(-1)
+			}
+		}
+	}
 }
 
-func process(inp [][]int) interface{} {
-
-	return nil
+func max(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
