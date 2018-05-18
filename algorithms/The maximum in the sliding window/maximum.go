@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 )
 
 /**
@@ -58,21 +56,32 @@ func main() {
 	}
 	fmt.Scan(&m)
 
-	fmt.Println(strings.Join(process(n, data, m), " "))
+	for _, val := range process(n, data, m) {
+		fmt.Print(fmt.Sprintf("%v ", val))
+	}
+	fmt.Println()
 }
 
-func process(n int, d []int, m int) (r []string) {
-	var max int
-	r = make([]string, 0, n-m+1)
+func process(n int, d []int, m int) (r []int) {
+	var queue []int
+	r = make([]int, 0, n-m+1)
 
 	for i := 0; i < n-m+1; i++ {
-		for _, val := range d[i : m+i] {
-			if val > max {
-				max = val
+		queue = d[i : m+i]
+		for _, v := range queue {
+			if i >= len(r) {
+				r = append(r, v)
+				continue
+			}
+			if r[i] < v {
+				r[i] = v
 			}
 		}
-		r = append(r, strconv.Itoa(max))
-		max = 0
 	}
 	return
 }
+
+// goos: linux
+// goarch: amd64
+// BenchmarkFlipAndInvertImage-2   	20000000	       108 ns/op
+// PASS
