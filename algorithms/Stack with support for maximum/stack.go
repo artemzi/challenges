@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"reflect"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -36,7 +34,7 @@ type (
 		length int
 	}
 	node struct {
-		value interface{}
+		value int
 		prev  *node
 	}
 )
@@ -59,31 +57,23 @@ func (s *Stack) Pop() {
 }
 
 // Push a value onto the top of the stack
-func (s *Stack) Push(value interface{}) {
+func (s *Stack) Push(value int) {
 	n := &node{value, s.top}
 	s.top = n
-	s.max = append(s.max, n.value.(int))
+	s.max = append(s.max, n.value)
 	s.length++
 }
 
 // Max return current maximum value in stack
 // for now works only with `int` type
 func (s *Stack) Max() int {
-	m := make([]int, len(s.max))
-	copy(m, s.max)
-
-	sort.Ints(m)
-	return m[len(m)-1]
-}
-
-// Call used for calling function by it's name
-func Call(m map[string]interface{}, name string, params ...interface{}) []reflect.Value {
-	f := reflect.ValueOf(m[name])
-	in := make([]reflect.Value, len(params))
-	for k, param := range params {
-		in[k] = reflect.ValueOf(param)
+	var m int
+	for _, v := range s.max {
+		if v > m {
+			m = v
+		}
 	}
-	return f.Call(in)
+	return m
 }
 
 func main() {
@@ -98,24 +88,19 @@ func main() {
 	}
 
 	s := New() // initialize stack
-	funcs := map[string]interface{}{
-		"pop":  s.Pop,
-		"push": s.Push,
-		"max":  s.Max,
-	}
 
 	for _, command := range data {
 		c := strings.Split(command, " ")
-		if len(c) > 1 {
+		if c[0] == "push" {
 			val, _ := strconv.Atoi(c[1])
-			Call(funcs, c[0], val)
+			s.Push(val)
 			continue
 		}
-		val := Call(funcs, c[0])
-		if 0 == len(val) {
+		if c[0] == "pop" {
+			s.Pop()
 			continue
 		}
-		r := val[0].Interface().(int)
-		fmt.Printf("%v\n", r)
+
+		fmt.Printf("%v\n", s.Max())
 	}
 }
