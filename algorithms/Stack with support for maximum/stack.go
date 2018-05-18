@@ -26,47 +26,29 @@ import (
 Формат выхода. Для каждого запроса max
 */
 
-type (
-	// Stack must have comment
-	Stack struct {
-		top *node
-		max []int
-	}
-	node struct {
-		value int
-		prev  *node
-	}
-)
-
-// New create a new stack
-func New() *Stack {
-	return &Stack{nil, nil}
+// Stack must have comments
+type Stack struct {
+	max []int
 }
 
 // Pop the top item of the stack and return it
 func (s *Stack) Pop() {
-	n := s.top
-	s.top = n.prev
 	s.max = s.max[:len(s.max)-1]
 }
 
 // Push a value onto the top of the stack
 func (s *Stack) Push(value int) {
-	n := &node{value, s.top}
-	s.top = n
-	s.max = append(s.max, n.value)
+	if 0 == len(s.max) || s.max[len(s.max)-1] < value {
+		s.max = append(s.max, value)
+	} else {
+		s.max = append(s.max, s.max[len(s.max)-1])
+	}
 }
 
 // Max return current maximum value in stack
 // for now works only with `int` type
 func (s *Stack) Max() int {
-	var m int
-	for _, v := range s.max {
-		if v > m {
-			m = v
-		}
-	}
-	return m
+	return s.max[len(s.max)-1]
 }
 
 func main() {
@@ -80,7 +62,7 @@ func main() {
 		data = append(data, input.Text())
 	}
 
-	s := New() // initialize stack
+	s := &Stack{[]int{}}
 
 	for _, command := range data {
 		c := strings.Split(command, " ")
