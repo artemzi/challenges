@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -68,13 +69,11 @@ func (s *Stack) Push(value interface{}) {
 // Max return current maximum value in stack
 // for now works only with `int` type
 func (s *Stack) Max() int {
-	var m int
-	for _, v := range s.max {
-		if v > m {
-			m = v
-		}
-	}
-	return m
+	m := make([]int, len(s.max))
+	copy(m, s.max)
+
+	sort.Ints(m)
+	return m[len(m)-1]
 }
 
 // Call used for calling function by it's name
