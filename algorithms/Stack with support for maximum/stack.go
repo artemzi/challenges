@@ -29,9 +29,8 @@ import (
 type (
 	// Stack must have comment
 	Stack struct {
-		top    *node
-		max    []int
-		length int
+		top *node
+		max []int
 	}
 	node struct {
 		value int
@@ -41,19 +40,14 @@ type (
 
 // New create a new stack
 func New() *Stack {
-	return &Stack{nil, nil, 0}
+	return &Stack{nil, nil}
 }
 
 // Pop the top item of the stack and return it
 func (s *Stack) Pop() {
-	if s.length == 0 {
-		os.Exit(0)
-	}
-
 	n := s.top
 	s.top = n.prev
 	s.max = s.max[:len(s.max)-1]
-	s.length--
 }
 
 // Push a value onto the top of the stack
@@ -61,7 +55,6 @@ func (s *Stack) Push(value int) {
 	n := &node{value, s.top}
 	s.top = n
 	s.max = append(s.max, n.value)
-	s.length++
 }
 
 // Max return current maximum value in stack
