@@ -2,66 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
-
-type (
-	// Stack must have comment
-	Stack struct {
-		top    *node
-		max    []int
-		length int
-	}
-	node struct {
-		value int
-		prev  *node
-	}
-)
-
-// New create a new stack
-func New() *Stack {
-	return &Stack{nil, nil, 0}
-}
-
-// Pop the top item of the stack and return it
-func (s *Stack) Pop() {
-	if s.length == 0 {
-		os.Exit(0)
-	}
-
-	n := s.top
-	s.top = n.prev
-	s.max = s.max[:len(s.max)-1]
-	s.length--
-}
-
-// Push a value onto the top of the stack
-func (s *Stack) Push(value int) {
-	n := &node{value, s.top}
-	s.top = n
-
-	if 0 == len(s.max) || s.max[len(s.max)-1] < value {
-		s.max = append(s.max, value)
-	} else {
-		s.max = append(s.max, s.max[len(s.max)-1])
-	}
-
-	s.length++
-}
-
-// Max return current maximum value in stack
-// for now works only with `int` type
-func (s *Stack) Max() int {
-	return s.max[len(s.max)-1]
-}
-
-// Clear just clean up slice
-func (s *Stack) Clear() {
-	s.top = &node{}
-	s.max = s.max[:0]
-}
 
 /**
 Максимум в скользящем окне
@@ -119,16 +62,17 @@ func main() {
 }
 
 func process(n int, d []int, m int) (r []string) {
-	s := New()
+	var max int
 	r = make([]string, 0, n-m+1)
 
 	for i := 0; i < n-m+1; i++ {
 		for _, val := range d[i : m+i] {
-			s.Push(val)
+			if val > max {
+				max = val
+			}
 		}
-		r = append(r, strconv.Itoa(s.Max()))
-		s.Clear()
+		r = append(r, strconv.Itoa(max))
+		max = 0
 	}
-
 	return
 }
