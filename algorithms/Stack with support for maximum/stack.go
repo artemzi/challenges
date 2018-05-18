@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -26,29 +27,64 @@ import (
 Формат выхода. Для каждого запроса max
 */
 
-// Stack must have comments
-type Stack struct {
-	max []int
+type (
+	// Stack must have comment
+	Stack struct {
+		top    *node
+		max    []int
+		length int
+	}
+	node struct {
+		value interface{}
+		prev  *node
+	}
+)
+
+// New create a new stack
+func New() *Stack {
+	return &Stack{nil, nil, 0}
 }
 
 // Pop the top item of the stack and return it
 func (s *Stack) Pop() {
+	if s.length == 0 {
+		os.Exit(0)
+	}
+
+	n := s.top
+	s.top = n.prev
 	s.max = s.max[:len(s.max)-1]
+	s.length--
 }
 
 // Push a value onto the top of the stack
-func (s *Stack) Push(value int) {
-	if 0 == len(s.max) || s.max[len(s.max)-1] < value {
-		s.max = append(s.max, value)
+func (s *Stack) Push(value interface{}) {
+	n := &node{value, s.top}
+	s.top = n
+
+	if 0 == len(s.max) || s.max[len(s.max)-1] < n.value.(int) {
+		s.max = append(s.max, n.value.(int))
 	} else {
 		s.max = append(s.max, s.max[len(s.max)-1])
 	}
+
+	s.length++
 }
 
 // Max return current maximum value in stack
 // for now works only with `int` type
 func (s *Stack) Max() int {
 	return s.max[len(s.max)-1]
+}
+
+// Call used for calling function by it's name
+func Call(m map[string]interface{}, name string, params ...interface{}) []reflect.Value {
+	f := reflect.ValueOf(m[name])
+	in := make([]reflect.Value, len(params))
+	for k, param := range params {
+		in[k] = reflect.ValueOf(param)
+	}
+	return f.Call(in)
 }
 
 func main() {
@@ -62,20 +98,25 @@ func main() {
 		data = append(data, input.Text())
 	}
 
-	s := &Stack{[]int{}}
+	s := New() // initialize stack
+	funcs := map[string]interface{}{
+		"pop":  s.Pop,
+		"push": s.Push,
+		"max":  s.Max,
+	}
 
 	for _, command := range data {
 		c := strings.Split(command, " ")
-		if c[0] == "push" {
+		if len(c) > 1 {
 			val, _ := strconv.Atoi(c[1])
-			s.Push(val)
+			Call(funcs, c[0], val)
 			continue
 		}
-		if c[0] == "pop" {
-			s.Pop()
+		val := Call(funcs, c[0])
+		if 0 == len(val) {
 			continue
 		}
-
-		fmt.Printf("%v\n", s.Max())
+		r := val[0].Interface().(int)
+		fmt.Printf("%v\n", r)
 	}
 }
