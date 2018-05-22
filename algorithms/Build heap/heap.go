@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /*
 Построение кучи
@@ -31,6 +33,8 @@ import "fmt"
 Ограничения. 1 ≤ n ≤ 10, 5; 0 ≤ A[i]
 */
 
+var swaps [][]int
+
 func main() {
 	var (
 		n int
@@ -41,5 +45,33 @@ func main() {
 		fmt.Scan(&data[i])
 	}
 
-	fmt.Printf("%d, %v\n", n, data)
+	swaps = make([][]int, 0, 4*n)
+
+	for i := n - 1; i >= 0; i-- {
+		shiftDown(i, data)
+	}
+
+	fmt.Println(len(swaps))
+	for _, v := range swaps {
+		fmt.Println(v[0], v[1])
+	}
+}
+
+func shiftDown(i int, data []int) {
+	l := i*2 + 1
+	r := i*2 + 2
+	if r < len(data) && data[r] < data[l] && data[i] > data[r] {
+		swap(i, r, &data)
+		shiftDown(r, data)
+	}
+	if l < len(data) && data[l] < data[i] {
+		swap(i, l, &data)
+		shiftDown(l, data)
+	}
+}
+
+func swap(c, p int, data *[]int) {
+	swaps = append(swaps, []int{c, p})
+
+	(*data)[p], (*data)[c] = (*data)[c], (*data)[p]
 }
