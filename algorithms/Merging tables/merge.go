@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 )
 
 /*
@@ -104,7 +103,6 @@ func main() {
 	}
 
 	max = Max(sizes)
-	log.Println(max)
 	for _, operation := range data {
 		d, s = operation[0], operation[1]
 		fmt.Printf("%d\n", Union(d-1, s-1, sizes))
