@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 /*
 Ваша цель в данной задаче — реализовать симуляцию объединения
 таблиц в базе данных.
@@ -40,6 +44,52 @@ package main
 
 */
 
-func main() {
+// Element represent disjoint set
+type Element struct {
+	Parent *Element
+	Value  interface{}
+}
 
+// Makeset operation
+func Makeset() *Element {
+	e := new(Element)
+	e.Parent = e
+	return e
+}
+
+// Find operation
+func Find(e *Element) *Element {
+	if e.Parent == e {
+		return e
+	}
+	e.Parent = Find(e.Parent)
+	return e.Parent
+}
+
+// Union operation
+func Union(e1, e2 *Element) {
+	root1 := Find(e1)
+	root2 := Find(e2)
+	root1.Parent = root2
+}
+
+func main() {
+	var (
+		n, m, d, s int
+	)
+	fmt.Scan(&n)
+	fmt.Scan(&m)
+	sizes := make([]int, n)
+	for i := 0; i < n; i++ {
+		fmt.Scan(&sizes[i])
+	}
+
+	data := make([][]int, m) // [destination, source]
+	for i := 0; i < m; i++ {
+		fmt.Scan(&d)
+		fmt.Scan(&s)
+		data[i] = []int{d, s}
+	}
+
+	fmt.Printf("DUBUG:  %d %d\n%v\n%v\n", n, m, sizes, data)
 }
