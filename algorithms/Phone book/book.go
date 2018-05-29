@@ -1,5 +1,13 @@
 package main
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
+
 /**
 Телефонная книга
 Реализовать структуру данных, эффективно обрабатывающую запро-
@@ -27,5 +35,36 @@ package main
 */
 
 func main() {
+	var (
+		n    int
+		data map[int]string
+	)
+	fmt.Scan(&n)
 
+	input := make([]string, 0, n)
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		if "" == scanner.Text() {
+			break
+		}
+		input = append(input, scanner.Text())
+	}
+
+	data = make(map[int]string, n)
+	for _, val := range input {
+		t := strings.Split(val, " ")
+		phone, _ := strconv.Atoi(t[1])
+		switch t[0] {
+		case "add":
+			data[phone] = t[2]
+		case "find":
+			if v, ok := data[phone]; ok {
+				fmt.Println(v)
+				break
+			}
+			fmt.Println("not found")
+		case "del":
+			data[phone] = "not found"
+		}
+	}
 }
