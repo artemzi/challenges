@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /**
 Проверка свойства дерева поиска
 	Проверить, является ли данное двоичное дерево деревом поиска.
@@ -30,6 +32,56 @@ package main
 		шина является потомком корня.
 */
 
-func main() {
+// Leaf must have comment
+type Leaf struct {
+	key   int
+	left  int
+	right int
+}
 
+const maxInt = int(^uint(0) >> 1)
+const minInt = -maxInt - 1
+
+func checkBst(t *[]Leaf, i int, mn int, mx int) bool {
+	tree := (*t)
+	if tree[i].key < mn || tree[i].key > mx {
+		return false
+	}
+	if tree[i].left == -1 && tree[i].right == -1 {
+		return true
+	}
+	if tree[i].left == -1 && tree[i].right != -1 {
+		return checkBst(&tree, tree[i].right, tree[i].key+1, mx)
+	}
+	if tree[i].left != -1 && tree[i].right == -1 {
+		return checkBst(&tree, tree[i].left, mn, tree[i].key-1)
+	}
+
+	return checkBst(&tree, tree[i].left, mn, tree[i].key-1) &&
+		checkBst(&tree, tree[i].right, tree[i].key+1, mx)
+}
+
+func main() {
+	var (
+		n, key, left, right int
+		tree                []Leaf
+	)
+	fmt.Scan(&n)
+	if n == 0 {
+		fmt.Println("CORRECT")
+	} else {
+		tree = make([]Leaf, n)
+		for i := 0; i < n; i++ {
+			fmt.Scan(&key)
+			fmt.Scan(&left)
+			fmt.Scan(&right)
+			tree[i] = Leaf{key, left, right}
+		}
+
+		if checkBst(&tree, 0, minInt, maxInt) {
+			fmt.Println("CORRECT")
+		} else {
+			fmt.Println("INCORRECT")
+		}
+	}
 }
