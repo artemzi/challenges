@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /**
 Обход двоичного дерева
 	Построить in-order, pre-order и post-order обходы данного двоичного дерева.
@@ -24,8 +26,77 @@ package main
 			частности, если left i 6 = −1 и right i 6 = −1, то left i 6 = right i ; ника-
 			кая вершина не является сыном двух вершин; каждая вершина
 			является потомком корня.
+
+		Пример:
+			вход:
+				5
+				4 1 2
+				2 3 4
+				5 -1 -1
+				1 -1 -1
+				3 -1 -1
+			выход:
+				1 2 3 4 5
+				4 2 1 3 5
+				1 3 2 5 4
 */
 
-func main() {
+// Leaf must have comment
+type Leaf struct {
+	key   uint
+	left  int
+	right int
+}
 
+func preOrder(v []Leaf, i int) {
+	fmt.Printf("%d ", v[i].key)
+	if v[i].left != -1 {
+		preOrder(v, v[i].left)
+	}
+	if v[i].right != -1 {
+		preOrder(v, v[i].right)
+	}
+}
+
+func inOrder(v []Leaf, i int) {
+	if v[i].left != -1 {
+		inOrder(v, v[i].left)
+	}
+	fmt.Printf("%d ", v[i].key)
+	if v[i].right != -1 {
+		inOrder(v, v[i].right)
+	}
+}
+
+func postOrder(v []Leaf, i int) {
+	if v[i].left != -1 {
+		postOrder(v, v[i].left)
+	}
+	if v[i].right != -1 {
+		postOrder(v, v[i].right)
+	}
+	fmt.Printf("%d ", v[i].key)
+}
+
+func main() {
+	var (
+		n, left, right int
+		key            uint
+		tree           []Leaf
+	)
+	fmt.Scan(&n)
+	tree = make([]Leaf, n)
+	for i := 0; i < n; i++ {
+		fmt.Scan(&key)
+		fmt.Scan(&left)
+		fmt.Scan(&right)
+		tree[i] = Leaf{key, left, right}
+	}
+
+	inOrder(tree, 0)
+	fmt.Println()
+	preOrder(tree, 0)
+	fmt.Println()
+	postOrder(tree, 0)
+	fmt.Println()
 }
