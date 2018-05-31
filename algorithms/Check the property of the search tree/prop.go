@@ -50,6 +50,11 @@ func checkBst(t *[]Leaf, i int, mn int, mx int) bool {
 	if tree[i].left == -1 && tree[i].right == -1 {
 		return true
 	}
+
+	if tree[i].key == tree[i].left {
+		return false
+	}
+
 	if tree[i].left == -1 && tree[i].right != -1 {
 		return checkBst(&tree, tree[i].right, tree[i].key+1, mx)
 	}
