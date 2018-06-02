@@ -1,0 +1,6 @@
+{
+  "Exclude": [
+    "exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported",
+    "comment on exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should be of the form \\w+ (\\S*['.]*)([a-zA-Z'.*]*)",
+    ]
+}
