@@ -31,28 +31,32 @@ Design HashMap
 package hashmap
 
 type MyHashMap struct {
+	val map[int]int
 }
 
 /** Initialize your data structure here. */
 func Constructor() MyHashMap {
-
-	return MyHashMap{}
+	return MyHashMap{
+		make(map[int]int, 2^20),
+	}
 }
 
 /** value will always be positive. */
-func (this *MyHashMap) Put(key int, value int) {
-
+func (m *MyHashMap) Put(key int, value int) {
+	m.val[key] = value
 }
 
 /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
-func (this *MyHashMap) Get(key int) int {
-
+func (m *MyHashMap) Get(key int) int {
+	if val, ok := m.val[key]; ok {
+		return val
+	}
 	return -1
 }
 
 /** Removes the mapping of the specified value key if this map contains a mapping for the key */
-func (this *MyHashMap) Remove(key int) {
-
+func (m *MyHashMap) Remove(key int) {
+	delete(m.val, key)
 }
 
 /**
