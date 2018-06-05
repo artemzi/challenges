@@ -19,7 +19,6 @@ Write an algorithm to determine if a number is "happy".
 */
 
 import (
-	"math"
 	"strconv"
 )
 
@@ -86,7 +85,7 @@ func calculate(n int) int {
 
 	for i := range tmp {
 		val, _ := strconv.Atoi(string(tmp[i]))
-		res += int(math.Pow(float64(val), 2))
+		res += val * val
 	}
 	return res
 }
