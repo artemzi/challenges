@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /**
 Given a string, find the length of the longest substring without repeating characters.
 
@@ -14,42 +16,33 @@ Given a string, find the length of the longest substring without repeating chara
 */
 
 func lengthOfLongestSubstring(s string) int {
-	if len(s) == 0 {
-		return 0
-	}
-	max := 1
+	set := make(map[rune]int, len(s))
 	data := []rune(s)
-
-	for i := len(data); i > 0; i-- {
-		for j := 0; j < i; j++ {
-			if !findDuplicates(data[j:i]) {
-				if max < len(data[j:i]) {
-					max = len(data[j:i])
-				}
-			}
+	var leftIndex, ret int
+	for i := 0; i < len(s); i++ {
+		if _, ok := set[data[i]]; ok {
+			leftIndex = max(leftIndex, set[data[i]]+1)
 		}
+		set[data[i]] = i
+		ret = max(ret, i-leftIndex+1)
 	}
-	return max
+	return ret
 }
 
-func findDuplicates(r []rune) bool {
-	set := make(map[rune]bool)
-	for _, val := range r {
-		if _, ok := set[val]; ok {
-			return true
-		}
-		set[val] = true
+func max(a, b int) int {
+	if a < b {
+		return b
 	}
-	return false
+	return a
 }
 
 func main() {
-	// fmt.Printf("%v\n", lengthOfLongestSubstring(""))
-	// fmt.Printf("%v\n", lengthOfLongestSubstring("pwwkew"))
-	// fmt.Printf("%v\n", lengthOfLongestSubstring("c"))
-	// fmt.Printf("%v\n", lengthOfLongestSubstring("au"))
-	// fmt.Printf("%v\n", lengthOfLongestSubstring("dvdf"))
-	// fmt.Printf("%v\n", lengthOfLongestSubstring("rdovre"))
+	fmt.Printf("%v\n", lengthOfLongestSubstring(""))
+	fmt.Printf("%v\n", lengthOfLongestSubstring("pwwkew"))
+	fmt.Printf("%v\n", lengthOfLongestSubstring("c"))
+	fmt.Printf("%v\n", lengthOfLongestSubstring("au"))
+	fmt.Printf("%v\n", lengthOfLongestSubstring("dvdf"))
+	fmt.Printf("%v\n", lengthOfLongestSubstring("rdovre"))
 }
 
-//  Time Limit Exceeded on ~2^20
+//  Easy to understand O(n) solution
