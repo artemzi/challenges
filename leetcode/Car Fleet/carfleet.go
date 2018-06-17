@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"sort"
+)
 
 /**
 N cars are going to the same destination along a one lane road.
@@ -33,10 +37,79 @@ N cars are going to the same destination along a one lane road.
 		All initial positions are different.
 */
 
+type Car struct {
+	position int
+	time     float64
+}
+
+type By func(c1, c2 *Car) bool
+
+type carSorter struct {
+	cars []*Car
+	by   func(c1, c2 *Car) bool // Closure used in the Less method.
+}
+
+// Len is part of sort.Interface.
+func (s *carSorter) Len() int {
+	return len(s.cars)
+}
+
+// Swap is part of sort.Interface.
+func (s *carSorter) Swap(i, j int) {
+	s.cars[i], s.cars[j] = s.cars[j], s.cars[i]
+}
+
+// Less is part of sort.Interface. It is implemented by calling the "by" closure in the sorter.
+func (s *carSorter) Less(i, j int) bool {
+	return s.by(s.cars[i], s.cars[j])
+}
+
+func (by By) Sort(cars []*Car) {
+	cr := &carSorter{
+		cars: cars,
+		by:   by, // The Sort method's receiver is the function (closure) that defines the sort order.
+	}
+	sort.Sort(cr)
+}
+
 func carFleet(target int, position []int, speed []int) int {
-	return -1
+	var ans int
+	N := len(position)
+	cars := make([]*Car, N)
+	for i, pos := range position {
+		cars[i] = &Car{
+			pos,
+			float64(target-pos) / float64(speed[i]),
+		}
+	}
+
+	By(func(c1, c2 *Car) bool {
+		return c1.position < c2.position
+	}).Sort(cars)
+
+	for _, c := range cars {
+
+		log.Printf("%v:%v\n", c.position, c.time)
+	}
+
+	t := N - 1
+	for t > 0 {
+		if cars[t].time < cars[t-1].time {
+			ans++
+		} else {
+			cars[t-1] = cars[t]
+		}
+		t--
+	}
+
+	if 0 == t {
+		return ans + 1
+	}
+
+	return ans
 }
 
 func main() {
 	fmt.Printf("expected: %v\ngot: %v\n", 3, carFleet(12, []int{10, 8, 0, 5, 3}, []int{2, 4, 1, 1, 3}))
+	fmt.Printf("expected: %v\ngot: %v\n", 2, carFleet(10, []int{6, 8}, []int{3, 2}))
 }
