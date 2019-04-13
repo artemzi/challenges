@@ -66,3 +66,33 @@ let removeOuterParentheses = function (S) {
     Memory Usage: 36.2 MB, less than 100.00 % of JavaScript online submissions
     for Remove Outermost Parentheses.
  */
+
+/**
+ * @param {string} S
+ * @return {string}
+ */
+let removeOuterParentheses = function (S) {
+    let res = '';
+    let c = 0;
+    let i;
+    let l = S.length;
+    for (i = 0; i < l; i++) {
+        if (S[i] == '(') {
+            c++;
+            if (c > 1) res += '(';
+        } else {
+            c--;
+            if (c >= 1) res += ')';
+        }
+    }
+    return res;
+};
+
+/**
+ * Result:
+ * 
+ * Runtime: 60 ms, faster than 100.00 % of JavaScript online submissions
+ for Remove Outermost Parentheses.
+ Memory Usage: 35.9 MB, less than 100.00 % of JavaScript online submissions
+ for Remove Outermost Parentheses.
+ */
